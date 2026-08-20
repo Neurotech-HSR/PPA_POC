@@ -1,0 +1,664 @@
+{
+  "MainDir": "/gea/home3/dati/github_folder/PPA_POC_SN/data",
+  "Subject": "yHC_Test",
+  "Pipeline": "Silent_naming",
+  "TimePoint": "T0_SN",
+
+  "Silent_naming": {
+    "Processes": [
+      {
+        "function": "PPA_load_mri",
+        "params": {
+          "abilitate": false
+        }
+      },
+      {
+        "function": "PPA_load_eeg",
+        "params": {
+          "abilitate": true,
+          "toRefine": true,
+          "taskName": "Immagine",
+          "restName": "Rest",
+          "searchWordTask": "SN_DEF",
+          "searchWordRest": "SN_REST_DEF"
+        }
+      },
+        {
+        "function": "PPA_load_channelmat",
+        "params": {
+          "abilitate": true,
+          "cond": "Immagine",
+          "eegName" : "Immagine",
+          "channelFile" : ".../github_folder/PPA_POC_SN/Brainstorm_related/zipSubject/channel.mat"
+        }
+      },
+      {
+        "function": "PPA_load_channelmat",
+        "params": {
+          "abilitate": true,
+          "cond": "Rest",
+          "eegName" : "Rest",
+          "channelFile" : ".../github_folder/PPA_POC_SN/Brainstorm_related/zipSubject/channel.mat"
+        }
+      },
+      {
+        "function": "PPA_head_model",
+        "params": {
+          "abilitate": true,
+          "cond": "Immagine",
+          "headModelStruct": {
+            "BemCond": [1, 0.0125, 1]
+          },
+          "getFrom" : null,
+          "possibleFolders" : ["Immagine", "Rest"]
+        }
+      },
+      {
+        "function": "PPA_fmri_import",
+        "params": {
+          "abilitate": false,
+          "num_augmentation": 3,
+          "area": 10,
+          "scoutsName": "SN_scout",
+          "atlasName": "SN_atlas",
+          "mniSearch": "naming",
+          "isContralateral": true,
+          "roiAreaRange": [8, 12]
+        }
+      },
+        {
+        "function": "PPA_compute_sources",
+        "params": {
+          "abilitate": true,
+          "model_name": "SN_source_model",
+          "atlasName": "SN_atlas",
+          "scoutsName": "SN_scout",
+          "cond": "Immagine"
+        }
+      },
+      {
+        "function": "PPA_extract_scouts",
+        "params": {
+          "abilitate": true,
+          "atlasName": "SN_atlas",
+          "scoutsName": "SN_scout",
+          "cond": "Immagine"
+        }
+      },
+      {
+        "function": "PPA_compute_sources",
+        "params": {
+          "abilitate": true,
+          "model_name": "SN_source_model",
+          "atlasName": "Contralateral_SN_atlas",
+          "scoutsName": "Contralateral_SN_scout",
+          "cond": "Immagine"
+        }
+      },
+      {
+        "function": "PPA_extract_scouts",
+        "params": {
+          "abilitate": true,
+          "atlasName": "Contralateral_SN_atlas",
+          "scoutsName": "Contralateral_SN_scout",
+          "cond": "Immagine"
+        }
+      },
+      {
+        "function": "PPA_head_model",
+        "params": {
+          "abilitate": true,
+          "cond": "Rest",
+          "headModelStruct": {
+            "BemCond": [1, 0.0125, 1]
+          },
+          "getFrom" : "Immagine",
+          "possibleFolders" : ["Immagine", "Rest"]
+        }
+      },
+      {
+        "function": "PPA_compute_sources",
+        "params": {
+          "abilitate": true,
+          "model_name": "Rest_source_model",
+          "atlasName": "SN_atlas",
+          "scoutsName": "SN_rest_scout",
+          "cond": "Rest"
+        }
+      },
+        {
+        "function": "PPA_extract_scouts",
+        "params": {
+          "abilitate": true,
+          "atlasName": "SN_atlas",
+          "scoutsName": "SN_rest_scout",
+          "cond": "Rest"
+        }
+      },
+        {
+        "function": "PPA_compute_normalized_PSD_channels",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Channels_PSD",
+          "cond": "Immagine",
+          "avgName" : "Grouped_normalized_PSD_Immagine_channels"
+        }
+      },
+        {
+        "function": "PPA_compute_normalized_PSD_channels",
+        "params": {
+          "abilitate": true,
+          "cond": "Rest",
+          "avgName" : "Grouped_normalized_PSD_Rest_channels"
+        }
+      },
+        {
+        "function": "PPA_compute_normalized_PSD_scouts",
+        "params": {
+          "abilitate": true,
+          "cond": "Immagine",
+          "scoutsName" : "SN_scout",
+          "avgName" : "Grouped_normalized_PSD_Immagine_scouts"
+        }
+      },
+        {
+        "function": "PPA_compute_normalized_PSD_scouts",
+        "params": {
+          "abilitate": true,
+          "cond": "Immagine",
+          "scoutsName" : "Contralateral_SN_scout",
+          "avgName" : "Grouped_normalized_PSD_Immagine_scouts_contralateral"
+        }
+      },
+      {
+        "function": "PPA_compute_normalized_PSD_scouts",
+        "params": {
+          "abilitate": true,
+          "cond": "Rest",
+          "scoutsName" : "SN_rest_scout",
+          "avgName" : "Grouped_normalized_PSD_Rest_scouts"
+        }
+      },
+        {
+        "function": "PPA_compute_ERSD_scouts",
+        "params": {
+          "abilitate": true,
+          "ersdName": "Scouts_ERSD_Immagine",
+          "cond": "Immagine",
+          "atlasName" : "SN_atlas",
+          "scoutsName" : "SN_scout"
+        }
+      },
+        {
+        "function": "PPA_compute_ERSD_scouts",
+        "params": {
+          "abilitate": true,
+          "ersdName": "Contralateral_Scouts_ERSD_Immagine",
+          "cond": "Immagine",
+          "atlasName" : "Contralateral_SN_atlas",
+          "scoutsName" : "Contralateral_SN_scout"
+        }
+      },
+      {
+        "function": "PPA_compute_ERSD_scouts",
+        "params": {
+          "abilitate": true,
+          "ersdName": "Scouts_ERSD_Rest",
+          "cond": "Rest",
+          "atlasName" : "SN_atlas",
+          "scoutsName" : "SN_rest_scout"
+        }
+      },
+        {
+        "function": "PPA_compute_ERSD_test",
+        "params": {
+          "abilitate": true,
+          "cond1": "Immagine",
+          "cond2": "Immagine",
+          "ersdName1" : "Scouts_ERSD_Immagine",
+          "ersdName2" : "Contralateral_Scouts_ERSD_Immagine",
+          "finalName" : "Comparison_Immagine_contralateral"
+        }
+      },
+      {
+        "function": "PPA_compute_ERSD_test",
+        "params": {
+          "abilitate": true,
+          "cond1": "Immagine",
+          "cond2": "Rest",
+          "ersdName1" : "Scouts_ERSD_Immagine",
+          "ersdName2" : "Scouts_ERSD_Rest",
+          "finalName" : "Comparison_Immagine_vs_Rest"
+        }
+      },
+        {
+        "function": "PPA_compute_ERSD_channels",
+        "params": {
+          "abilitate": true,
+          "ersdName": "Channels_ERSD_Immagine",
+          "cond": "Immagine"
+        }
+      },
+      {
+        "function": "PPA_compute_ERSD_channels",
+        "params": {
+          "abilitate": true,
+          "ersdName": "Channels_ERSD_Rest",
+          "cond": "Rest"
+        }
+      },
+        {
+        "function": "PPA_compute_mean_ERSD",
+        "params": {
+          "abilitate": true,
+          "ersdName": "Channels_ERSD_Immagine",
+          "cond": "Immagine",
+          "avgName" : "MEAN_Channels_ERSD_Immagine"
+        }
+        },
+      {
+        "function": "PPA_compute_mean_ERSD",
+        "params": {
+          "abilitate": true,
+          "ersdName": "Channels_ERSD_Rest",
+          "cond": "Rest",
+          "avgName" : "MEAN_Channels_ERSD_Rest"
+        }
+      },
+      {
+        "function": "PPA_compute_mean_ERSD",
+        "params": {
+          "abilitate": true,
+          "ersdName": "Scouts_ERSD_Immagine",
+          "cond": "Immagine",
+          "avgName" : "MEAN_Scouts_ERSD_Immagine"
+        }
+      },
+      {
+        "function": "PPA_compute_mean_ERSD",
+        "params": {
+          "abilitate": true,
+          "ersdName": "Contralateral_Scouts_ERSD_Immagine",
+          "cond": "Immagine",
+          "avgName" : "MEAN_Contralateral_Scouts_ERSD_Immagine"
+        }
+      },
+      {
+        "function": "PPA_compute_mean_ERSD",
+        "params": {
+          "abilitate": true,
+          "ersdName": "Scouts_ERSD_Rest",
+          "cond": "Rest",
+          "avgName" : "MEAN_Scouts_ERSD_Rest"
+        }
+      },
+        {
+        "function": "PPA_compute_PSD_channels",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Channels_PSD",
+          "cond": "Immagine",
+          "computeAverage" : true,
+          "avgName" : "Avg_channels_PSD"
+        }
+      },
+        {
+        "function": "PPA_compute_PSD_channels",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Channels_PSD_Rest",
+          "cond": "Rest",
+          "computeAverage" : true,
+          "avgName" : "Avg_channels_PSD_Rest"
+        }
+      },
+        {
+        "function": "PPA_compute_PSD_scouts",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Scouts_PSD",
+          "cond": "Immagine",
+          "scoutsName" : "SN_scout",
+          "computeAverage" : true,
+          "avgName" : "Avg_scouts_PSD"
+        }
+      },
+        {
+        "function": "PPA_compute_PSD_scouts",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Contralateral_scouts_PSD",
+          "cond": "Immagine",
+          "scoutsName" : "Contralateral_SN_scout",
+          "computeAverage" : true,
+          "avgName" : "Avg_contralateral_scouts_PSD"
+        }
+      },
+      {
+        "function": "PPA_compute_PSD_scouts",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Scouts_Rest_PSD",
+          "cond": "Rest",
+          "scoutsName" : "SN_rest_scout",
+          "computeAverage" : true,
+          "avgName" : "Avg_scouts_Rest_PSD"
+        }
+      },
+      {
+        "function": "PPA_compute_FOOOF_scouts",
+        "params": {
+          "abilitate": true,
+          "cond": "Immagine",
+          "scoutsName": "SN_scout",
+          "prefix": "Scouts"
+        }
+      },
+      {
+        "function": "PPA_compute_FOOOF_scouts",
+        "params": {
+          "abilitate": true,
+          "cond": "Immagine",
+          "scoutsName": "Contralateral_SN_scout",
+          "prefix": "Contralateral_Scouts"
+        }
+      },
+      {
+        "function": "PPA_compute_FOOOF_scouts",
+        "params": {
+          "abilitate": true,
+          "cond": "Rest",
+          "scoutsName": "SN_rest_scout",
+          "prefix": "Scouts"
+        }
+      },
+      {
+        "function": "PPA_extract_freq_bands",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Channels_PSD",
+          "cond": "Immagine",
+          "bands" : {
+                "delta" : [[1, 4]],
+                "theta" : [[5, 7]],
+                "alpha" : [[8, 14]],
+                "beta" : [[14, 30]],
+                "gamma1" : [[31, 45]]
+          },
+          "bandsName" : "Channels_freqs_PSD"
+        }
+        },
+        {
+        "function": "PPA_extract_freq_bands",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Channels_PSD_Rest",
+          "cond": "Rest",
+          "bands" : {
+                "delta" : [[1, 4]],
+                "theta" : [[5, 7]],
+                "alpha" : [[8, 14]],
+                "beta" : [[14, 30]],
+                "gamma1" : [[31, 45]]
+          },
+          "bandsName" : "Channels_freqs_PSD_Rest"
+        }
+      },
+        {
+        "function": "PPA_extract_freq_bands",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Scouts_PSD",
+          "cond": "Immagine",
+          "bands" : {
+                "delta" : [[1, 4]],
+                "theta" : [[5, 7]],
+                "alpha" : [[8, 14]],
+                "beta" : [[14, 30]],
+                "gamma1" : [[31, 45]]
+          },
+          "bandsName" : "Scouts_Immagine_freqs_PSD"
+        }
+      },
+        {
+        "function": "PPA_extract_freq_bands",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Contralateral_scouts_PSD",
+          "cond": "Immagine",
+          "bands" : {
+                "delta" : [[1, 4]],
+                "theta" : [[5, 7]],
+                "alpha" : [[8, 14]],
+                "beta" : [[14, 30]],
+                "gamma1" : [[31, 45]]
+          },
+          "bandsName" : "Contralateral_Scouts_Immagine_freqs_PSD"
+        }
+        },
+        {
+        "function": "PPA_extract_freq_bands",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Scouts_Rest_PSD",
+          "cond": "Rest",
+          "bands" : {
+                "delta" : [[1, 4]],
+                "theta" : [[5, 7]],
+                "alpha" : [[8, 14]],
+                "beta" : [[14, 30]],
+                "gamma1" : [[31, 45]]
+          },
+          "bandsName" : "Scouts_Rest_freqs_PSD"
+        }
+      },
+        {
+        "function": "PPA_extract_freq_bands",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Channels_ERSD_Immagine",
+          "cond": "Immagine",
+          "bands" : {
+                "delta" : [[1, 4]],
+                "theta" : [[5, 7]],
+                "alpha" : [[8, 14]],
+                "beta" : [[14, 30]],
+                "gamma1" : [[31, 45]]
+          },
+          "bandsName" : "Channels_ERSD_freqs_Immagine"
+        }
+      },
+        {
+        "function": "PPA_extract_freq_bands",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Channels_ERSD_Rest",
+          "cond": "Rest",
+          "bands" : {
+                "delta" : [[1, 4]],
+                "theta" : [[5, 7]],
+                "alpha" : [[8, 14]],
+                "beta" : [[14, 30]],
+                "gamma1" : [[31, 45]]
+          },
+          "bandsName" : "Channels_ERSD_freqs_Rest"
+        }
+      },
+        {
+        "function": "PPA_extract_freq_bands",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Scouts_ERSD_Immagine",
+          "cond": "Immagine",
+          "bands" : {
+                "delta" : [[1, 4]],
+                "theta" : [[5, 7]],
+                "alpha" : [[8, 14]],
+                "beta" : [[14, 30]],
+                "gamma1" : [[31, 45]]
+          },
+          "bandsName" : "Scouts_ERSD_freqs_Immagine"
+        }
+      },
+        {
+        "function": "PPA_extract_freq_bands",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Contralateral_Scouts_ERSD_Immagine",
+          "cond": "Immagine",
+          "bands" : {
+                "delta" : [[1, 4]],
+                "theta" : [[5, 7]],
+                "alpha" : [[8, 14]],
+                "beta" : [[14, 30]],
+                "gamma1" : [[31, 45]]
+          },
+          "bandsName" : "Contralateral_Scouts_ERSD_freqs_Immagine"
+        }
+      },
+        {
+        "function": "PPA_extract_freq_bands",
+        "params": {
+          "abilitate": true,
+          "PSDname": "Scouts_ERSD_Rest",
+          "cond": "Rest",
+          "bands" : {
+                "delta" : [[1, 4]],
+                "theta" : [[5, 7]],
+                "alpha" : [[8, 14]],
+                "beta" : [[14, 30]],
+                "gamma1" : [[31, 45]]
+          },
+          "bandsName" : "Scouts_ERSD_freqs_Rest"
+        }
+      },
+        {
+        "function": "PPA_compute_test",
+        "params": {
+          "abilitate": true,
+          "fileName1": "Scouts_Immagine_freqs_PSD",
+          "fileName2": "Contralateral_Scouts_Immagine_freqs_PSD",
+          "compName" : "Comparison_Scouts_PSD_Immagine_vs_contralateral",
+          "resultType" : "timefreq"
+        }
+      },
+        {
+        "function": "PPA_compute_test",
+        "params": {
+          "abilitate": true,
+          "fileName1": "Scouts_Immagine_freqs_PSD",
+          "fileName2": "Scouts_Rest_freqs_PSD",
+          "compName" : "Comparison_Scouts_PSD_Immagine_vs_Rest",
+          "resultType" : "timefreq"
+         }
+        },
+        {
+        "function": "PPA_compute_test",
+        "params": {
+          "abilitate": true,
+          "fileName1": "Channels_freqs_PSD",
+          "fileName2": "Channels_freqs_PSD_Rest",
+          "compName" : "Comparison_Channels_PSD_Immagine_vs_Rest",
+          "resultType" : "timefreq"
+        }
+        },
+        {
+        "function": "PPA_compute_test",
+        "params": {
+          "abilitate": true,
+          "fileName1": "Channels_ERSD_freqs_Immagine",
+          "fileName2": "Channels_ERSD_freqs_Rest",
+          "compName" : "Comparison_Channels_ERSD_freqs_Immagine_vs_Rest",
+          "resultType" : "timefreq"
+        }
+        },
+        {
+        "function": "PPA_compute_test",
+        "params": {
+          "abilitate": true,
+          "fileName1": "Scouts_ERSD_freqs_Immagine",
+          "fileName2": "Contralateral_Scouts_ERSD_freqs_Immagine",
+          "compName" : "Comparison_Scouts_ERSD_freqs_Immagine_vs_contralateral",
+          "resultType" : "timefreq"
+        }
+        },
+        {
+        "function": "PPA_compute_test",
+        "params": {
+          "abilitate": true,
+          "fileName1": "Scouts_ERSD_freqs_Immagine",
+          "fileName2": "Scouts_ERSD_freqs_Rest",
+          "compName" : "Comparison_Scouts_ERSD_freqs_Immagine_vs_Rest",
+          "resultType" : "timefreq"
+        }
+      },
+      {
+        "function": "PPA_compute_test",
+        "params": {
+          "abilitate": true,
+          "fileName1": "Scouts_FOOOF_Exponent_Immagine",
+          "fileName2": "Contralateral_Scouts_FOOOF_Exponent_Immagine",
+          "compName": "Comparison_FOOOF_Exponent_Immagine_vs_Contralateral",
+          "resultType": "timefreq"
+        }
+      },
+      {
+        "function": "PPA_compute_test",
+        "params": {
+          "abilitate": true,
+          "fileName1": "Scouts_FOOOF_Exponent_Immagine",
+          "fileName2": "Scouts_FOOOF_Exponent_Rest",
+          "compName": "Comparison_FOOOF_Exponent_Immagine_vs_Rest",
+          "resultType": "timefreq"
+        }
+      },
+      {
+        "function": "PPA_compute_test",
+        "params": {
+          "abilitate": true,
+          "fileName1": "Scouts_FOOOF_Offset_Immagine",
+          "fileName2": "Contralateral_Scouts_FOOOF_Offset_Immagine",
+          "compName": "Comparison_FOOOF_Offset_Immagine_vs_Contralateral",
+          "resultType": "timefreq"
+        }
+      },
+      {
+        "function": "PPA_compute_test",
+        "params": {
+          "abilitate": true,
+          "fileName1": "Scouts_FOOOF_Offset_Immagine",
+          "fileName2": "Scouts_FOOOF_Offset_Rest",
+          "compName": "Comparison_FOOOF_Offset_Immagine_vs_Rest",
+          "resultType": "timefreq"
+        }
+      },
+        {
+        "function": "PPA_tf_phase",
+        "params": {
+          "abilitate": true,
+          "cond": "Immagine",
+          "tfName": "for_ITPC",
+          "searchName" : "SN_scout"
+        }
+      },
+      {
+        "function": "PPA_tf_phase",
+        "params": {
+          "abilitate": true,
+          "cond": "Immagine",
+          "tfName": "Contra_for_ITPC",
+          "searchName" : "Contralateral_SN_scout"
+        }
+      },
+      {
+        "function": "PPA_tf_phase",
+        "params": {
+          "abilitate": true,
+          "cond": "Rest",
+          "tfName": "Rest_for_ITPC",
+          "searchName" : "SN_rest_scout"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+% Brainstorm
+% v. 3.260407 (07-Apr-2026)
+% github 6ca877612ecba80eea7ac7280669f58e81066b1c

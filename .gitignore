@@ -1,0 +1,2 @@
+token.txt
+echo "PPA_POC_SN/Brainstorm_related/zipSubject/yHC_Test.zip" >> .gitignore

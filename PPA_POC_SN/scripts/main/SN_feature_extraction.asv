@@ -1,0 +1,44 @@
+clear; close all; clc;
+
+%% Addpaths
+
+[fileDir, ~, ~] = fileparts(matlab.desktop.editor.getActiveFilename);
+% Brainstorm addpath
+addpath(fullfile(fileDir,'..','..','Brainstorm_related/Brainstorm_current_version/brainstorm3'))
+addpath(fullfile(fileDir,'..','functions'))
+addpath(fullfile(fileDir,'..','functions'))
+
+if ~brainstorm('status')
+    brainstorm
+end
+
+protocolName = 'SN_POC';
+protocolStruct = bst_get('ProtocolInfo');
+if ~strcmp(protocolStruct.Comment, protocolName)
+    error('Wrong Protocol set in Brainstorm')
+end
+
+%% Soggetti
+subjs = bst_get('ProtocolSubjects').Subject;
+subjs(ismember({subjs.Name}, {'Group_analysis'})) = [];
+numSubjs = numel(subjs);
+
+%% Cartella dei risultati
+% resultsDir = '/gea/home3/dati/Tesi_jacopo/scripts/Silent_naming/Results_v2_features';
+resultsDir = '/gea/home3/dati/Tesi_jacopo/scripts/Silent_naming/Results_v2_features_neurosynth';
+
+%% Computa
+for s = 1:numSubjs
+    subName = subjs(s).Name;
+    % if ~strcmp(subName, 'PPA_001_W5_DLPFC')
+    %     continue
+    % end
+    if ~startsWith(subName, 'HC_')
+        continue
+    end
+    if ~strcmp(subName, 'HC_006_T0_SN')
+        continue
+    end
+    % PPA_SN_ROI_features_v2(subName, resultsDir);
+    PPA_SN_ROI_features_v2_HC_neurosynth(subName, resultsDir);
+end

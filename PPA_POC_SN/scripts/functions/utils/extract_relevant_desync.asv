@@ -1,0 +1,175 @@
+% function powStruct = extract_relevant_sync_desync(sub, cond, searchWord, excludeContra, timeLimit, freqLimit, bandName, minDesync, powStruct)
+function powStruct = extract_relevant_sync_desync( varargin )
+% Funzione per trovare se ci sono delle ROI in un average degli ersd di una
+% condizione specifica di Brainstorm.
+% INPUT:
+%       sub ---> Nome del soggetto in Brainstorm
+%       cond ---> Nome della condizione (e.g. la cartella) in Brainstorm
+%       searchWord ---> Parola chiave con cui viene visualzzato il nome in Brainstorm
+%       excludeContra ---> Se escludere controlaterale dalla ricerca
+%       timeLimit ---> istanti temporali in secondi entro cui cercare. Default: [0.07 - 0.15]
+%       freqLimit ---> Range di frequenza entro cui cercare
+%       bandName ---> Nome con cui creare la struttura risultato
+%       minDesync ---> minimo valore di desincronizzazione, default: 0
+% OUTPUT:
+%       powStruct ---> Struttura riassuntiva
+
+%% ========================= VARARGIN MANAGER =============================
+% Controllo che varargin sia un numero pari
+if mod(length(varargin),2) ~= 0
+    error('Gli argomenti devono essere coppie Nome, Valore');
+end
+
+for i = 1:2:length(varargin)
+    name  = varargin{i};
+    value = varargin{i+1};
+
+    if ~ischar(name)
+        error('I nomi dei parametri devono essere stringhe');
+    end
+
+    switch lower(name)
+
+        case 'sub'
+            if isempty(value)
+                error('Immettere un soggetto');
+            end
+            sub = value;
+
+        case 'cond'
+            if isempty(value)
+                error('Immettere una condizione');
+            end
+            cond = value;
+
+        case 'searchword'
+            if isempty(value)
+                error('Immettere una condizione');
+            end
+            searchWord = value;
+
+        case 'excludecontra'
+            excludeContra = logical(value);
+
+        case 'timelimit'
+            if isempty(value)
+                error('Immettere una condizione');
+            end
+            timeLimit = value;
+
+        case 'freqlimit'
+            if isempty(value)
+                error('Immettere una condizione');
+            end
+            freqLimit = value;
+
+        case 'bandname'
+            if isempty(value)
+                error('Immettere una condizione');
+            end
+            bandName = value;
+
+        case 'mindesync'
+            if isempty(value)
+                error('Immettere una condizione');
+            end
+            minDesync = value;
+
+        case 'powstruct'
+            powStruct = value;
+           
+        case 'direction'
+            direction = value;
+
+        otherwise
+            error('Parametro "%s" non riconosciuto', name);
+    end
+end
+
+%% ====================== CHECK FINALI ===================================
+
+% TODO (?) Ci dovrebbe essere un check che tutte le variabili abbiano la
+% stessa lunghezza
+% if isempty(sub)
+%     error('Parametro "sub" obbligatorio.');
+% end
+% 
+% if isempty(cond)
+%     error('Parametro "cond" obbligatorio.');
+% end
+% 
+% if isempty(cond)
+%     error('Parametro "cond" obbligatorio.');
+% end
+
+%% =============================== SETUP FINALE ===========================
+numCycles = numel(sub);
+fprintf("Sono stati inserire %d soggetti, procedo a fare %d cicli\n", numel(sub),numel(sub))
+
+%% ============================== MAIN ====================================
+
+% Calcola l'average dei timeF, tanto verrà sempre usato lo stesso file
+
+powFiles = bst_process('CallProcess', 'process_select_files_timefreq', [], [], ...
+    'subjectname',   sub, ...
+    'condition',     cond, ...
+    'tag',           searchWord, ...
+    'includebad',    0, ...
+    'includeintra',  0, ...
+    'includecommon', 0, ...
+    'outprocesstab', 'no');  % No
+
+% Escludi controlaterali o meno
+if currExclude
+    powFiles(~contains({powFiles.Comment}, searchWord) | contains({powFiles.Comment}, 'contralateral')) = [];
+else
+    powFiles(~contains({powFiles.Comment}, 'contralateral')) = [];
+end
+
+% Average dei file
+ersdAverage = bst_process('CallProcess', 'process_average', powFiles, [], ...
+'avgtype',       1, ...  % Everything
+'avg_func',      1, ...  % Arithmetic average:  mean(x)
+'weighted',      0, ...
+'matchrows',     1, ...
+'iszerobad',     1);
+
+powMean = in_bst_data(ersdAverage.FileName);
+t = powMean.Time;
+freqs = powMean.Freqs;
+roiNames = powMean.RowNames;
+data = powMean.TF;
+numRois = numel(roiNames);
+for c = 1:numCycles
+
+    currTlim = timeLimit(c,:);
+    currFlim = freqLimit(c,:);
+    currBandName = bandName{c};
+    %% Set time
+    
+    timeIdx = t >= currTlim(1) & t <= currTlim(2);
+    freqsIdx = freqs >= currFlim(1) & freqs <= currFlim(2);
+    
+    check = false(numRois,1);
+    for r = 1:numRois
+        currRoi = roiNames{r};
+        tmpData = squeeze(data(r,timeIdx,freqsIdx));
+        if strcmpi(direction{c}, 'ascend')
+            tmpCheck = length(find(tmpData(:)>= minDesync)) > 0;
+        else
+            tmpCheck = length(find(tmpData(:)<= minDesync)) > 0;
+        end
+        if tmpCheck
+            check(r) = true;
+        end
+    end
+    powStruct.(currBandName) = struct();
+    powStruct.(currBandName).check = check;
+    powStruct.(currBandName).direction = direction{c};
+    powStruct.(currBandName).Freqs = freqs(freqsIdx);
+    powStruct.(currBandName).Time = t(timeIdx);
+    powStruct.(currBandName).Data = powMean.TF(:,timeIdx,freqsIdx);
+
+
+end
+end

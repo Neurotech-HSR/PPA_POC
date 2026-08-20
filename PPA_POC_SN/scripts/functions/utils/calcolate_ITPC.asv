@@ -1,0 +1,92 @@
+function ITPC = calcolate_ITPC(sub, cond, searchQuery, minT, maxT, useAllTime, toPlot)
+% Funzione per calcolare l'Inter Trial Phase Coherence seguendo il metodo
+% di FieldTrip (https://www.fieldtriptoolbox.org/faq/spectral/itc/)
+
+
+%% ====================== VARARGIN MANAGER ================================
+if nargin < 4
+    minT = 0.07;
+end
+
+if nargin < 5
+    maxT = 0.15;
+end
+
+if nargin < 6
+    useAllTime = 0;
+else
+    if useAllTime == 1 && ~isempty(maxT) && ~isempty(minT)
+        error('Sono stati settati sia di usare il tempo massimo, che di usare limiti temporali specifici')
+    end
+end
+
+if nargin < 7
+    toPlot = 0;
+end
+
+%% ============================= INPUT FILES ==============================
+
+% Trova i file TF relativi al soggetto (NB: ogni file deve esere con un
+% commento (ovvero il nome con cui è visualizzabile di Brainstorm) unico
+tfFiles = bst_process('CallProcess', 'process_select_files_timefreq', [], [], ...
+    'subjectname',   sub, ...
+    'condition',     cond, ...
+    'tag',           searchQuery, ...
+    'includebad',    0, ...
+    'includeintra',  0, ...
+    'includecommon', 0, ...
+    'outprocesstab', 'no');  % No
+
+tfFiles(~contains({tfFiles.Comment}, [searchQuery, ' '])) = [];
+
+% Prealloca l'insieme delle Time-Frequency
+AllTF = [];
+
+for f = 1:numel(tfFiles)
+    tmpF = in_bst_data(tfFiles(f).FileName);
+
+    if f == 1
+        times = tmpF.Time;
+        timeIdx = zeros(length(times),1);
+        % Controlla che il soggetto non abbia impostato di usare tutto il
+        % tempo a disposizione
+        if useAllTime == 1 && isempty(minT) && isempty(maxT)
+            minT = times(1);
+            minT = times(end);
+        end
+
+        timeIdx(times >= minT & times <= maxT) = 1;
+        timeIdx = logical(timeIdx);
+        times = times(timeIdx);
+        nTime = length(tmpF.Time);
+        nFreq = length(tmpF.Freqs);
+        nTrials = numel(tfFiles);
+        AllTF = zeros(nTime, nFreq, nTrials);
+    end
+
+    % Estrai la fase e converti in vettore unitario
+    phaseMap = angle(squeeze(tmpF.TF(1,:,:)));
+    AllTF(:,:,f) = exp(1i * phaseMap);
+end
+
+% Taglia per gli intervalli di tempo selezionati
+AllTF = AllTF(timeIdx, :, :);
+% ITPC
+ITPC = abs(sum(AllTF, 3))' / nTrials;   % → size = [time × freq]
+
+%% =============================== PLOT ===================================
+
+if toPlot
+    figure('Units', 'normalized','Position',[.25 .25 .5 .5])
+    imagesc(ITPC)
+    set(gca, 'YDir', 'normal')
+    axis equal
+    caxis([0 1])
+    title('ITPC')
+    colormap('hot')
+    colorbar
+end
+end
+
+
+
