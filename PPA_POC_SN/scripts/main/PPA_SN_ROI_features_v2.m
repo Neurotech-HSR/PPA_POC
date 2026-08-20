@@ -4,30 +4,30 @@ function PPA_SN_ROI_features_v2(subName, mainDir, varargin)
 % Features estratte per ogni ROI (scout), per le comparisons:
 %   Task vs Rest  |  Task vs Contralateral Task
 %
-%   - Complessità: SampEn, HFD, PE  (per-trial → Wilcoxon paired)
+%   - Complexity:  SampEn, HFD, PE  (per-trial → Wilcoxon paired)
 %   - FOOOF:       Exponent, Offset  (per-trial → Wilcoxon paired)
-%   - ERSD:        sync theta/delta, desync alpha/beta (da file BST)
-%   - ITPC:        theta↑, alpha↑, beta↓  (gate soglia + Wilcoxon TF per-trial)
+%   - ERSD:        sync theta/delta, desync alpha/beta (from BST file)
+%   - ITPC:        theta↑, alpha↑, beta↓  (gate threshold + Wilcoxon TF per-trial)
 %
-% Pesi basati su importanza electrode-level (SHAP + mean_rank):
+% Weights based on electrode-level importance (SHAP + mean_rank)
 %   sampen=2.0, itpc=1.3, fooof=1.0, ersd_theta/delta=1.0,
 %   hfd=0.6, ersd_alpha/beta=0.5, pe=0.5
 %
 % VARARGIN
-%   abilitate         bool    — se false, skip                  (default: true)
-%   taskCond          str     — condizione task BST             (default: 'Immagine')
-%   restCond          str     — condizione rest BST             (default: 'Rest')
+%   abilitate         bool    — if false, skip                  (default: true)
+%   taskCond          str     — task condition BST              (default: 'Immagine')
+%   restCond          str     — rest condition BST              (default: 'Rest')
 %   scoutsName        str     — tag scout ipsi                  (default: 'SN_scout')
 %   contraScoutsName  str     — tag scout contra                (default: 'Contralateral_SN_scout')
 %   restScoutsName    str     — tag scout rest                  (default: 'SN_rest_scout')
-%   itpcSearch        str     — tag file TF per ITPC            (default: 'for_ITPC')
-%   itpcMinVal        float   — soglia gate ITPC                (default: 0.3)
-%   compImgRest       str     — nome file comparison ERSD Img vs Rest
-%   compImgContra     str     — nome file comparison ERSD Img vs Contra
-%   alpha             float   — soglia significatività          (default: 0.05)
-%   tRange            [1x2]   — finestra temporale ERSD+ITPC   (default: [0.07 0.15])
-%   resultsDir        str     — cartella output                 (default: mainDir/Results)
-%   fs                float   — freq campionamento Hz           (default: 256)
+%   itpcSearch        str     — tag file TF for ITPC            (default: 'for_ITPC')
+%   itpcMinVal        float   — threshold gate ITPC             (default: 0.3)
+%   compImgRest       str     — file comparison name ERSD Img vs Rest
+%   compImgContra     str     — file comparison name ERSD Img vs Contra
+%   alpha             float   — significativity thresho         (default: 0.05)
+%   tRange            [1x2]   — temporal window ERSD+ITPC       (default: [0.07 0.15])
+%   resultsDir        str     — output folder                   (default: mainDir/Results)
+%   fs                float   — sample frequency Hz             (default: 256)
 
 %% ====================== VARARGIN MANAGER ================================
 % Default parameters

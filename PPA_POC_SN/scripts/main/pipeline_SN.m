@@ -7,7 +7,8 @@ clc
 basepath = pwd;
 scriptFolder = fileparts(basepath);
 % Add Brainstorm and utilities
-addpath(genpath(basepath));
+addpath(fullfile(fileDir,'..','..','Brainstorm_related/Brainstorm_current_version/brainstorm3'))
+addpath(genpath(fullfile(fileDir,'..','functions')))
 if ~brainstorm('status')
     brainstorm
 end

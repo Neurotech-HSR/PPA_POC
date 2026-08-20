@@ -3,7 +3,7 @@ function PPA_load_mri(subName,mainDir, varargin)
     %% Varargin manager
     abilitate = varargin{end};
     if ~abilitate
-        fprintf("<strong>Funzione PPA_fmri_import saltata</strong>\n")
+        fprintf("<strong>Function PPA_fmri_import skipped</strong>\n")
         return
     end
     
@@ -80,7 +80,7 @@ function PPA_load_mri(subName,mainDir, varargin)
            keyboard
         end
     else
-        fprintf("<strong>Numero anomalo di superfici BEM rilevate. Controllare</strong>\n")
+        fprintf("<strong>Strange number of BEM surfaces detected. Please check.</strong>\n")
         keyboard
     end
     

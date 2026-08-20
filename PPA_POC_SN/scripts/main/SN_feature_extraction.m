@@ -5,7 +5,7 @@ clear; close all; clc;
 [fileDir, ~, ~] = fileparts(matlab.desktop.editor.getActiveFilename);
 % Brainstorm addpath
 addpath(fullfile(fileDir,'..','..','Brainstorm_related/Brainstorm_current_version/brainstorm3'))
-addpath(fullfile(fileDir,'..','functions'))
+addpath(genpath(fullfile(fileDir,'..','functions')))
 if ~brainstorm('status')
     brainstorm
 end
