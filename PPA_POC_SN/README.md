@@ -8,7 +8,7 @@ MATLAB/Brainstorm pipeline to derive **subject-specific EEG functional scouts** 
 
 | Component | Notes |
 |---|---|
-| MATLAB | R20xx or later (add version) |
+| MATLAB | R2023 or later |
 | [Brainstorm](https://neuroimage.usc.edu/brainstorm/) | Must be on the MATLAB path (handled in `pipeline_SN.m`) |
 | Sample dataset | `yHC_Test.zip` — see [Data](#data) |
 
@@ -41,7 +41,7 @@ Download the repository `.zip` and unzip it, keeping the folder organization unc
 
 ### 2. Get the sample subject
 
-Download `yHC_Test.zip` from **[<INSERT DRIVE LINK>]** and place it in:
+Download `yHC_Test.zip` from **https://drive.google.com/drive/folders/1WSh1cB4vg7vZC5B93z4whyiqrLNxy4EY?usp=sharing** and place it in:
 
 ```
 PPA_POC_SN/Brainstorm_related/zipSubject/
@@ -55,7 +55,7 @@ Open `Config_SN.json` in the main folder and set the `mainDir` field to the abso
 
 ```json
 {
-  "mainDir": "C:\\Users\\<user>\\Desktop\\PPA_github\\PPA_POC_SN\\data"
+  "mainDir": "previousPath\\PPA_POC_SN\\data"
 }
 ```
 
